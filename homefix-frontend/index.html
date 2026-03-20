@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>HomeFix AI — Book a Service</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet"/>
+
+<style>
+/* ═══════════════════════════════════════
+   TOKENS
+═══════════════════════════════════════ */
+:root{
+  --bg:       #f5f2ec;
+  --bg2:      #edeae1;
+  --bg3:      #e3dfd4;
+  --ink:      #1a1714;
+  --ink2:     #2e2b27;
+  --ink3:     #46423c;
+  --muted:    #8a857c;
+  --border:   #d4cfc5;
+  --border2:  #bfb9ad;
+  --orange:   #e8470a;
+  --orange2:  #ff6830;
+  --orange-bg:#fff1ec;
+  --green:    #0d9e62;
+  --green-bg: #edfaf4;
+  --red:      #dc2626;
+  --amber:    #d97706;
+  --blue:     #2563eb;
+  --shadow:   0 2px 16px rgba(26,23,20,0.10);
+  --shadow2:  0 8px 40px rgba(26,23,20,0.15);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html{scroll-behavior:smooth;}
+
+body{
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'Outfit', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Grain texture ── */
+body::after{
+  content:'';
+  position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:9999;
+}
+
+/* ═══════════════════════════════════════
+   HEADER
+═══════════════════════════════════════ */
+header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 48px;
+  height:68px;
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;
+  backdrop-filter:blur(8px);
+}
+.logo{
+  display:flex;align-items:center;gap:10px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:26px;
+  letter-spacing:1px;
+  color:var(--ink);
+  text-decoration:none;
+}
+.logo-mark{
+  width:34px;height:34px;
+  background:var(--orange);
+  border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;
+  color:#fff;
+}
+.header-right{display:flex;align-items:center;gap:16px;}
+.api-pill{
+  display:flex;align-items:center;gap:7px;
+  font-size:12px;font-family:'JetBrains Mono',monospace;
+  padding:6px 14px;border-radius:20px;
+  background:var(--bg2);border:1px solid var(--border);
+  color:var(--muted);
+}
+.api-dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 6px var(--green);
+  animation:blink 2s ease-in-out infinite;
+}
+.api-dot.off{background:var(--amber);box-shadow:0 0 6px var(--amber);}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+
+/* ═══════════════════════════════════════
+   HERO STRIP
+═══════════════════════════════════════ */
+.hero{
+  background: var(--orange);
+  padding: 56px 48px 52px;
+  position:relative;
+  overflow:hidden;
+}
+.hero::before{
+  content:'BOOK';
+  position:absolute;
+  right:-20px;top:-30px;
+  font-family:'Bebas Neue',sans-serif;
+  font-size:220px;
+  color:rgba(255,255,255,0.07);
+  letter-spacing:-8px;
+  pointer-events:none;
+  line-height:1;
+  white-space:nowrap;
+}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:11px;font-family:'JetBrains Mono',monospace;
+  letter-spacing:2px;text-transform:uppercase;
+  background:rgba(255,255,255,0.15);
+  color:#fff;
+  padding:6px 14px;border-radius:20px;
+  border:1px solid rgba(255,255,255,0.2);
+  margin-bottom:20px;
+}
+.hero-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:#fff;animation:blink 1.5s ease-in-out infinite;}
+.hero h1{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(52px,8vw,96px);
+  letter-spacing:1px;
+  color:#fff;
+  line-height:0.95;
+  margin-bottom:16px;
+}
+.hero h1 em{font-style:normal;color:rgba(255,255,255,0.45);}
+.hero-sub{
+  font-size:16px;color:rgba(255,255,255,0.75);
+  max-width:480px;font-weight:300;
+  line-height:1.6;
+}
+
+/* ── 3 trust badges ── */
+.trust-row{
+  display:flex;gap:12px;margin-top:32px;flex-wrap:wrap;
+}
+.trust-chip{
+  display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.12);
+  border:1px solid rgba(255,255,255,0.18);
+  padding:8px 16px;border-radius:10px;
+  font-size:13px;font-weight:600;color:#fff;
+}
+.trust-chip span{font-size:16px;}
+
+/* ═══════════════════════════════════════
+   MAIN LAYOUT
+═══════════════════════════════════════ */
+.page-body{
+  display:grid;
+  grid-template-columns:1fr 380px;
+  gap:0;
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px;
+}
+
+/* ═══════════════════════════════════════
+   FORM AREA
+═══════════════════════════════════════ */
+.form-area{
+  padding:48px 48px 48px 0;
+  border-right:1px solid var(--border);
+}
+
+/* Step indicator */
+.steps-indicator{
+  display:flex;align-items:center;gap:0;
+  margin-bottom:40px;
+}
+.step-item{
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:600;color:var(--muted);
+  cursor:pointer;
+  transition:color .2s;
+}
+.step-item.active{color:var(--orange);}
+.step-item.done{color:var(--green);}
+.step-num{
+  width:30px;height:30px;border-radius:50%;
+  background:var(--bg2);border:1.5px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;
+  transition:all .2s;flex-shrink:0;
+}
+.step-item.active .step-num{background:var(--orange);border-color:var(--orange);color:#fff;}
+.step-item.done  .step-num{background:var(--green); border-color:var(--green); color:#fff;}
+.step-line-join{flex:1;height:1px;background:var(--border);margin:0 12px;min-width:20px;}
+.step-line-join.done{background:var(--green);}
+
+/* Form steps (panels) */
+.form-step{display:none;}
+.form-step.active{display:block;animation:stepIn .35s ease both;}
+@keyframes stepIn{from{opacity:0;transform:translateX(16px);}to{opacity:1;transform:none;}}
+
+.section-title{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:32px;letter-spacing:.5px;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+.section-sub{font-size:14px;color:var(--muted);margin-bottom:28px;}
+
+/* Form elements */
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.fgroup{margin-bottom:20px;}
+.flabel{
+  display:block;
+  font-size:11px;font-family:'JetBrains Mono',monospace;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--muted);margin-bottom:8px;font-weight:500;
+}
+.finput,.fselect,.ftextarea{
+  width:100%;
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  padding:13px 16px;
+  color:var(--ink);
+  font-family:'Outfit',sans-serif;
+  font-size:14px;font-weight:500;
+  outline:none;
+  transition:border-color .2s,box-shadow .2s;
+}
+.finput:focus,.fselect:focus,.ftextarea:focus{
+  border-color:var(--orange);
+  box-shadow:0 0 0 3px rgba(232,71,10,.1);
+}
+.finput.error{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.08);}
+.finput::placeholder{color:var(--muted);}
+.fselect{
+  appearance:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%238a857c' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;cursor:pointer;
+}
+.fselect option{background:#fff;color:var(--ink);}
+.ftextarea{resize:vertical;min-height:100px;line-height:1.6;}
+.field-hint{font-size:11px;color:var(--muted);margin-top:5px;font-family:'JetBrains Mono',monospace;}
+.field-error{font-size:11px;color:var(--red);margin-top:5px;display:none;}
+
+/* ── Service Cards ── */
+.service-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;margin-bottom:24px;
+}
+.svc-card{
+  padding:16px 12px;
+  border:1.5px solid var(--border);
+  border-radius:12px;
+  background:#fff;
+  cursor:pointer;
+  text-align:center;
+  transition:all .2s;
+  position:relative;
+  overflow:hidden;
+}
+.svc-card:hover{border-color:var(--orange);transform:translateY(-2px);box-shadow:var(--shadow);}
+.svc-card.selected{
+  border-color:var(--orange);
+  background:var(--orange-bg);
+  box-shadow:0 0 0 3px rgba(232,71,10,.1);
+}
+.svc-card.selected::after{
+  content:'✓';
+  position:absolute;top:6px;right:8px;
+  font-size:11px;font-weight:800;color:var(--orange);
+}
+.svc-icon{font-size:26px;margin-bottom:6px;display:block;}
+.svc-name{font-size:12px;font-weight:700;color:var(--ink);}
+.svc-rate{font-size:10px;color:var(--muted);font-family:'JetBrains Mono',monospace;margin-top:2px;}
+
+/* ── Priority ── */
+.priority-group{display:flex;gap:10px;margin-bottom:20px;}
+.prio-btn{
+  flex:1;padding:12px 8px;
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  background:#fff;cursor:pointer;
+  font-family:'Outfit',sans-serif;
+  font-size:12px;font-weight:700;
+  text-align:center;transition:all .2s;
+}
+.prio-btn:hover{border-color:var(--border2);}
+.prio-btn.sel-normal{border-color:#2563eb;background:#eff6ff;color:#2563eb;}
+.prio-btn.sel-urgent{border-color:var(--amber);background:#fffbeb;color:var(--amber);}
+.prio-btn.sel-emergency{border-color:var(--red);background:#fef2f2;color:var(--red);}
+
+/* ── Date / time slot ── */
+.time-slots{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:8px;
+  margin-bottom:20px;
+}
+.time-slot{
+  padding:9px 6px;
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  background:#fff;cursor:pointer;
+  font-size:12px;font-weight:600;
+  text-align:center;color:var(--ink3);
+  transition:all .2s;
+}
+.time-slot:hover{border-color:var(--orange);}
+.time-slot.selected{border-color:var(--orange);background:var(--orange-bg);color:var(--orange);}
+.time-slot.disabled{background:var(--bg2);color:var(--muted);cursor:not-allowed;border-color:var(--border);}
+
+/* ── Navigation buttons ── */
+.step-nav{
+  display:flex;gap:12px;margin-top:32px;
+  padding-top:28px;border-top:1px solid var(--border);
+}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Outfit',sans-serif;font-weight:700;font-size:14px;
+  padding:13px 28px;border-radius:10px;border:none;
+  cursor:pointer;transition:all .2s;text-decoration:none;
+  letter-spacing:.2px;
+}
+.btn-primary{background:var(--orange);color:#fff;}
+.btn-primary:hover{background:var(--orange2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(232,71,10,.35);}
+.btn-secondary{background:var(--bg2);color:var(--ink3);border:1.5px solid var(--border);}
+.btn-secondary:hover{border-color:var(--border2);background:var(--bg3);}
+.btn-block{width:100%;justify-content:center;}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important;}
+.btn-large{padding:16px 36px;font-size:16px;border-radius:12px;}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+
+/* ═══════════════════════════════════════
+   SIDEBAR PANEL
+═══════════════════════════════════════ */
+.side-panel{
+  padding:48px 0 48px 40px;
+  display:flex;flex-direction:column;gap:20px;
+}
+
+/* Price estimate card */
+.estimate-card{
+  background:var(--ink);
+  border-radius:20px;
+  padding:28px;
+  color:#fff;
+  position:relative;overflow:hidden;
+}
+.estimate-card::before{
+  content:'';position:absolute;
+  width:200px;height:200px;border-radius:50%;
+  background:var(--orange);opacity:.08;
+  top:-60px;right:-60px;pointer-events:none;
+}
+.est-label{
+  font-size:10px;font-family:'JetBrains Mono',monospace;
+  letter-spacing:2px;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-bottom:6px;
+}
+.est-price{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:58px;line-height:1;color:#fff;
+  margin-bottom:4px;
+}
+.est-sub{font-size:12px;color:rgba(255,255,255,.45);}
+.est-breakdown{
+  margin-top:20px;border-top:1px solid rgba(255,255,255,.1);
+  padding-top:20px;display:flex;flex-direction:column;gap:0;
+}
+.est-row{
+  display:flex;justify-content:space-between;
+  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.07);
+  font-size:13px;
+}
+.est-row:last-child{border:none;}
+.est-row span{color:rgba(255,255,255,.5);}
+.est-row strong{color:#fff;font-weight:600;}
+.est-row.total span{color:rgba(255,255,255,.8);font-weight:700;}
+.est-row.total strong{color:var(--orange2);font-size:16px;font-family:'Bebas Neue',sans-serif;letter-spacing:.5px;}
+
+/* AI assign preview */
+.ai-card{
+  background:#fff;
+  border:1.5px solid var(--border);
+  border-radius:16px;
+  padding:22px;
+}
+.ai-head{
+  font-size:10px;font-family:'JetBrains Mono',monospace;
+  letter-spacing:2px;text-transform:uppercase;
+  color:var(--orange);margin-bottom:14px;
+  display:flex;align-items:center;gap:8px;
+}
+.ai-head::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--orange);box-shadow:0 0 8px var(--orange);animation:blink 1.5s ease-in-out infinite;}
+.worker-preview{
+  display:flex;align-items:center;gap:14px;
+  padding:14px;background:var(--bg);border-radius:12px;
+  border:1px solid var(--border);margin-bottom:12px;
+}
+.wp-avatar{
+  width:44px;height:44px;border-radius:12px;
+  background:linear-gradient(135deg,var(--orange),#9333ea);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;flex-shrink:0;
+}
+.wp-name{font-weight:700;font-size:14px;margin-bottom:3px;}
+.wp-spec{font-size:11px;color:var(--orange);font-family:'JetBrains Mono',monospace;}
+.wp-rating{font-size:12px;color:var(--muted);margin-top:2px;}
+.ai-note{font-size:12px;color:var(--muted);line-height:1.6;}
+
+/* Info chips */
+.info-chips{display:flex;flex-direction:column;gap:10px;}
+.info-chip{
+  display:flex;align-items:flex-start;gap:12px;
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:12px;padding:14px;
+}
+.ic-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+.ic-body .ic-title{font-size:13px;font-weight:700;color:var(--ink);margin-bottom:2px;}
+.ic-body .ic-text{font-size:12px;color:var(--muted);line-height:1.5;}
+
+/* Progress dots (step progress in sidebar) */
+.progress-steps{
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:14px;padding:18px;
+}
+.ps-title{font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:14px;}
+.ps-item{
+  display:flex;align-items:center;gap:12px;
+  margin-bottom:10px;font-size:13px;color:var(--muted);
+}
+.ps-item:last-child{margin-bottom:0;}
+.ps-item.done{color:var(--green);}
+.ps-item.active{color:var(--orange);font-weight:700;}
+.ps-circle{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--bg2);border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:700;flex-shrink:0;
+  transition:all .2s;
+}
+.ps-item.done  .ps-circle{background:var(--green);border-color:var(--green);color:#fff;}
+.ps-item.active .ps-circle{background:var(--orange);border-color:var(--orange);color:#fff;}
+
+/* ═══════════════════════════════════════
+   SUCCESS SCREEN
+═══════════════════════════════════════ */
+#successScreen{
+  display:none;
+  max-width:700px;margin:0 auto;
+  padding:60px 24px;text-align:center;
+  animation:stepIn .5s ease both;
+}
+.success-burst{
+  width:100px;height:100px;
+  border-radius:50%;
+  background:var(--green-bg);
+  border:2px solid var(--green);
+  display:flex;align-items:center;justify-content:center;
+  font-size:44px;
+  margin:0 auto 28px;
+  box-shadow:0 0 50px rgba(13,158,98,.15);
+  animation:popBounce .6s cubic-bezier(.175,.885,.32,1.275) both;
+}
+@keyframes popBounce{from{transform:scale(0);opacity:0;}to{transform:scale(1);opacity:1;}}
+.success-h{
+  font-family:'Bebas Neue',sans-serif;
+  font-size:clamp(44px,7vw,72px);
+  letter-spacing:.5px;color:var(--ink);
+  margin-bottom:10px;line-height:1;
+}
+.success-p{font-size:15px;color:var(--muted);margin-bottom:32px;max-width:440px;margin-left:auto;margin-right:auto;}
+
+.booking-ref{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--ink);color:#fff;
+  font-family:'JetBrains Mono',monospace;
+  font-size:22px;font-weight:500;
+  padding:14px 28px;border-radius:12px;
+  margin-bottom:36px;letter-spacing:2px;
+}
+.booking-ref-label{font-size:10px;letter-spacing:2px;color:rgba(255,255,255,.4);display:block;margin-bottom:4px;}
+
+.booking-details-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:12px;margin-bottom:32px;text-align:left;
+}
+.bdc{
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:12px;padding:16px;
+}
+.bdc-label{font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:6px;}
+.bdc-val{font-size:15px;font-weight:700;color:var(--ink);}
+.bdc-val.green{color:var(--green);}
+.bdc-val.orange{color:var(--orange);}
+
+.assigned-worker-big{
+  background:var(--ink);border-radius:16px;
+  padding:24px;display:flex;align-items:center;gap:18px;
+  text-align:left;margin-bottom:28px;
+}
+.awb-avatar{
+  width:60px;height:60px;border-radius:14px;
+  background:linear-gradient(135deg,var(--orange),#9333ea);
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;flex-shrink:0;
+}
+.awb-tag{font-size:10px;font-family:'JetBrains Mono',monospace;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:4px;}
+.awb-name{font-family:'Bebas Neue',sans-serif;font-size:28px;color:#fff;letter-spacing:.5px;margin-bottom:3px;}
+.awb-spec{font-size:12px;color:var(--orange2);font-family:'JetBrains Mono',monospace;}
+.awb-rating{font-size:13px;color:rgba(255,255,255,.5);margin-top:4px;}
+
+.success-actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+
+/* ═══════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════ */
+footer{
+  text-align:center;padding:24px;
+  border-top:1px solid var(--border);
+  font-size:12px;color:var(--muted);
+  font-family:'JetBrains Mono',monospace;
+}
+
+/* ═══════════════════════════════════════
+   TOAST
+═══════════════════════════════════════ */
+.toast-zone{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:10px;z-index:9998;}
+.toast{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:14px 18px;
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:14px;box-shadow:var(--shadow2);
+  min-width:280px;max-width:360px;
+  animation:toastIn .35s cubic-bezier(.175,.885,.32,1.275) both;
+}
+@keyframes toastIn{from{opacity:0;transform:translateX(50px);}to{opacity:1;transform:none;}}
+.toast.leaving{animation:toastOut .3s ease both;}
+@keyframes toastOut{to{opacity:0;transform:translateX(50px);}}
+.toast-icon{font-size:18px;flex-shrink:0;}
+.toast-title{font-size:13px;font-weight:700;margin-bottom:2px;}
+.toast-msg{font-size:12px;color:var(--muted);}
+.toast.success{border-color:rgba(13,158,98,.3);}
+.toast.error{border-color:rgba(220,38,38,.3);}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════ */
+@media(max-width:960px){
+  .page-body{grid-template-columns:1fr;}
+  .side-panel{padding:0 0 40px 0;border-left:none;}
+  .form-area{padding:32px 0;border-right:none;border-bottom:1px solid var(--border);}
+  .hero{padding:36px 24px 32px;}
+  header{padding:0 24px;}
+  .frow{grid-template-columns:1fr;}
+  .estimate-card{display:none;}
+}
+@media(max-width:600px){
+  .service-grid{grid-template-columns:repeat(2,1fr);}
+  .time-slots{grid-template-columns:repeat(3,1fr);}
+  .booking-details-grid{grid-template-columns:1fr;}
+  .hero h1{font-size:48px;}
+}
+</style>
+</head>
+<body>
+
+<!-- TOAST ZONE -->
+<div class="toast-zone" id="toastZone"></div>
+
+<!-- ══ HEADER ══ -->
+<header>
+  <a class="logo" href="#">
+    <div class="logo-mark">🔧</div>
+    HomeFix AI
+  </a>
+  <div class="header-right">
+    <div class="api-pill">
+      <div class="api-dot" id="apiDot"></div>
+      <span id="apiStatus">Connecting…</span>
+    </div>
+  </div>
+</header>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <div class="hero-tag">AI-Powered Booking</div>
+  <h1>Book a<br/><em>Service</em></h1>
+  <p class="hero-sub">Fill in your details and our AI assigns the best available worker — instantly, automatically, perfectly matched.</p>
+  <div class="trust-row">
+    <div class="trust-chip"><span>⚡</span> Instant Assignment</div>
+    <div class="trust-chip"><span>🎯</span> AI Matched</div>
+    <div class="trust-chip"><span>💰</span> Transparent Pricing</div>
+    <div class="trust-chip"><span>📍</span> Live Tracking</div>
+  </div>
+</div>
+
+<!-- ══ MAIN BODY ══ -->
+<div style="background:var(--bg);padding:0 24px;">
+  <div class="page-body">
+
+    <!-- ═══ FORM AREA ═══ -->
+    <div class="form-area" id="formArea">
+
+      <!-- Step indicator -->
+      <div class="steps-indicator" id="stepsIndicator">
+        <div class="step-item active" id="stepInd1" onclick="goToStep(1)">
+          <div class="step-num">1</div>
+          <span>Your Info</span>
+        </div>
+        <div class="step-line-join" id="stepLine1"></div>
+        <div class="step-item" id="stepInd2" onclick="goToStep(2)">
+          <div class="step-num">2</div>
+          <span>Service</span>
+        </div>
+        <div class="step-line-join" id="stepLine2"></div>
+        <div class="step-item" id="stepInd3" onclick="goToStep(3)">
+          <div class="step-num">3</div>
+          <span>Schedule</span>
+        </div>
+        <div class="step-line-join" id="stepLine3"></div>
+        <div class="step-item" id="stepInd4" onclick="goToStep(4)">
+          <div class="step-num">4</div>
+          <span>Confirm</span>
+        </div>
+      </div>
+
+      <!-- ── STEP 1: Customer Info ── -->
+      <div class="form-step active" id="step1">
+        <div class="section-title">Your Details</div>
+        <p class="section-sub">Tell us who you are so we can reach you</p>
+
+        <div class="frow">
+          <div class="fgroup">
+            <label class="flabel">Full Name *</label>
+            <input class="finput" id="fName" placeholder="Arjun Mehta" required/>
+            <div class="field-error" id="errName">Please enter your name</div>
+          </div>
+          <div class="fgroup">
+            <label class="flabel">Phone Number *</label>
+            <input class="finput" id="fPhone" placeholder="+91 98765 43210" required/>
+            <div class="field-error" id="errPhone">Please enter a valid phone number</div>
+          </div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Email Address</label>
+          <input class="finput" id="fEmail" type="email" placeholder="you@example.com"/>
+          <div class="field-hint">Optional — for booking confirmation</div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">Full Address *</label>
+          <textarea class="ftextarea" id="fAddress" placeholder="Flat 4B, Green Park Apartments, Chennai - 600001" required></textarea>
+          <div class="field-error" id="errAddress">Please enter your address</div>
+        </div>
+        <div class="fgroup">
+          <label class="flabel">City *</label>
+          <select class="fselect" id="fCity">
+            <option value="">Select your city…</option>
+            <option>Chennai</option><option>Mumbai</option><option>Delhi</option>
+            <option>Bengaluru</option><option>Hyderabad</option><option>Kolkata</option>
+            <option>Pune</option><option>Ahmedabad</option><option>Jaipur</option><option>Surat</option>
+          </select>
+          <div class="field-error" id="errCity">Please select your city</div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-primary" onclick="nextStep(1)">
+            Continue to Service →
+          </button>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Service Selection ── -->
+      <div class="form-step" id="step2">
+        <div class="section-title">Pick a Service</div>
+        <p class="section-sub">Select the type of service you need</p>
+
+        <div class="service-grid" id="svcGrid">
+          <div class="svc-card" onclick="selectService('Plumbing',this)">
+            <span class="svc-icon">🔧</span>
+            <div class="svc-name">Plumbing</div>
+            <div class="svc-rate">from ₹600/hr</div>
+          </div>
+          <div class="svc-card" onclick="selectService('Electrical',this)">
+            <span class="svc-icon">⚡</span>
+            <div class="svc-name">Electrical</div>
+            <div class="svc-rate">from ₹500/hr</div>
+          </div>
+          <div class="svc-card" onclick="selectService('Carpentry',this)">
+            <span class="svc-icon">🪚</span>
+            <div class="svc-name">Carpentry</div>
+            <div class="svc-rate">from ₹700/hr</div>
+          </div>
+          <div class="svc-card" onclick="selectService('Cleaning',this)">
+            <span class="svc-icon">🧹</span>
+            <div class="svc-name">Cleaning</div>
+            <div class="svc-rate">from ₹400/hr</div>
+          </div>
+          <div class="svc-card" onclick="selectService('Painting',this)">
+            <span class="svc-icon">🖌️</span>
+            <div class="svc-name">Painting</div>
+            <div class="svc-rate">from ₹800/hr</div>
+          </div>
+          <div class="svc-card" onclick="selectService('AC Repair',this)">
+            <span class="svc-icon">❄️</span>
+            <div class="svc-name">AC Repair</div>
+            <div class="svc-rate">from ₹900/hr</div>
+          </div>
+        </div>
+        <div class="field-error" id="errService" style="display:none;margin-bottom:12px;">Please select a service</div>
+
+        <div class="fgroup">
+          <label class="flabel">Priority Level *</label>
+          <div class="priority-group">
+            <div class="prio-btn sel-normal" onclick="setPriority('Normal',this)">◇ Normal</div>
+            <div class="prio-btn" onclick="setPriority('Urgent',this)">⚠ Urgent</div>
+            <div class="prio-btn" onclick="setPriority('Emergency',this)">🆘 Emergency</div>
+          </div>
+          <input type="hidden" id="fPriority" value="Normal"/>
+          <div class="field-hint">Urgent & Emergency bookings are prioritized and priced higher</div>
+        </div>
+
+        <div class="fgroup">
+          <label class="flabel">Describe the Problem *</label>
+          <textarea class="ftextarea" id="fDesc" placeholder="E.g. — The kitchen tap is leaking and water is dripping constantly. The pipe under the sink also seems loose." required></textarea>
+          <div class="field-error" id="errDesc">Please describe the problem</div>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" onclick="prevStep(2)">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(2)">Continue to Schedule →</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 3: Schedule ── -->
+      <div class="form-step" id="step3">
+        <div class="section-title">Pick a Schedule</div>
+        <p class="section-sub">Choose when you want the worker to arrive</p>
+
+        <div class="fgroup">
+          <label class="flabel">Preferred Date *</label>
+          <input class="finput" id="fDate" type="date" required/>
+          <div class="field-error" id="errDate">Please select a date</div>
+        </div>
+
+        <div class="fgroup">
+          <label class="flabel">Preferred Time Slot</label>
+          <div class="time-slots" id="timeSlots">
+            <div class="time-slot selected" onclick="selectTime('08:00',this)">8:00 AM</div>
+            <div class="time-slot" onclick="selectTime('10:00',this)">10:00 AM</div>
+            <div class="time-slot" onclick="selectTime('12:00',this)">12:00 PM</div>
+            <div class="time-slot" onclick="selectTime('14:00',this)">2:00 PM</div>
+            <div class="time-slot" onclick="selectTime('16:00',this)">4:00 PM</div>
+            <div class="time-slot" onclick="selectTime('18:00',this)">6:00 PM</div>
+            <div class="time-slot disabled">8:00 PM</div>
+            <div class="time-slot disabled">10:00 PM</div>
+          </div>
+          <input type="hidden" id="fTime" value="08:00"/>
+        </div>
+
+        <div class="fgroup">
+          <label class="flabel">Estimated Duration</label>
+          <select class="fselect" id="fDuration">
+            <option value="1 hour">1 Hour</option>
+            <option value="2-3 hours" selected>2–3 Hours</option>
+            <option value="Half day">Half Day (4 hrs)</option>
+            <option value="Full day">Full Day (8 hrs)</option>
+          </select>
+          <div class="field-hint">Affects the price estimate — you can adjust later</div>
+        </div>
+
+        <div class="fgroup">
+          <label class="flabel">Parts / Materials Needed?</label>
+          <select class="fselect" id="fParts" onchange="updateEstimate()">
+            <option value="No">No — Labour only</option>
+            <option value="Yes">Yes — Labour + Materials</option>
+          </select>
+        </div>
+
+        <div class="step-nav">
+          <button class="btn btn-secondary" onclick="prevStep(3)">← Back</button>
+          <button class="btn btn-primary" onclick="nextStep(3)">Review & Confirm →</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 4: Confirm ── -->
+      <div class="form-step" id="step4">
+        <div class="section-title">Review & Confirm</div>
+        <p class="section-sub">Check everything before we assign your worker</p>
+
+        <!-- Review summary -->
+        <div id="reviewSummary" style="margin-bottom:28px;"></div>
+
+        <!-- Edit links -->
+        <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;">
+          <button class="btn btn-secondary" style="font-size:12px;padding:8px 16px;" onclick="goToStep(1)">✏ Edit Info</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:8px 16px;" onclick="goToStep(2)">✏ Edit Service</button>
+          <button class="btn btn-secondary" style="font-size:12px;padding:8px 16px;" onclick="goToStep(3)">✏ Edit Schedule</button>
+        </div>
+
+        <!-- Terms checkbox -->
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:28px;padding:16px;background:var(--bg2);border-radius:10px;border:1.5px solid var(--border);">
+          <input type="checkbox" id="fTerms" style="margin-top:3px;accent-color:var(--orange);width:16px;height:16px;flex-shrink:0;cursor:pointer;"/>
+          <label for="fTerms" style="font-size:13px;color:var(--ink3);cursor:pointer;line-height:1.5;">
+            I confirm the above details are correct and I agree to HomeFix AI's <strong style="color:var(--orange);">Terms of Service</strong>. I understand the price shown is an estimate and may vary slightly.
+          </label>
+        </div>
+        <div class="field-error" id="errTerms">Please accept the terms to continue</div>
+
+        <div class="step-nav" style="flex-direction:column;">
+          <button class="btn btn-primary btn-large btn-block" id="submitBtn" onclick="submitBooking()">
+            🔧 Confirm & Book Now
+          </button>
+          <button class="btn btn-secondary" style="justify-content:center;" onclick="prevStep(4)">← Go Back</button>
+        </div>
+      </div>
+
+    </div>
+    <!-- /form-area -->
+
+    <!-- ═══ SIDE PANEL ═══ -->
+    <div class="side-panel" id="sidePanelContent">
+
+      <!-- Progress tracker -->
+      <div class="progress-steps">
+        <div class="ps-title">Your Progress</div>
+        <div class="ps-item active" id="ps1">
+          <div class="ps-circle">1</div>Your Information
+        </div>
+        <div class="ps-item" id="ps2">
+          <div class="ps-circle">2</div>Service Selection
+        </div>
+        <div class="ps-item" id="ps3">
+          <div class="ps-circle">3</div>Schedule & Timing
+        </div>
+        <div class="ps-item" id="ps4">
+          <div class="ps-circle">4</div>Review & Confirm
+        </div>
+      </div>
+
+      <!-- Price estimate -->
+      <div class="estimate-card" id="estimateCard">
+        <div class="est-label">AI Price Estimate</div>
+        <div class="est-price" id="estPrice">₹—</div>
+        <div class="est-sub" id="estSubtext">Select a service to see estimate</div>
+        <div class="est-breakdown" id="estBreakdown" style="display:none;">
+          <div class="est-row"><span>Labour Cost</span><strong id="estLabour">—</strong></div>
+          <div class="est-row"><span>Materials</span><strong id="estMaterials">—</strong></div>
+          <div class="est-row"><span>Service Tax (5%)</span><strong id="estTax">—</strong></div>
+          <div class="est-row total"><span>Estimated Total</span><strong id="estTotal">—</strong></div>
+        </div>
+      </div>
+
+      <!-- AI worker preview -->
+      <div class="ai-card">
+        <div class="ai-head">AI Worker Assignment</div>
+        <div class="worker-preview" id="workerPreview">
+          <div class="wp-avatar" id="wpAvatar">?</div>
+          <div>
+            <div class="wp-name" id="wpName">Selecting best match…</div>
+            <div class="wp-spec" id="wpSpec">Select a service first</div>
+            <div class="wp-rating" id="wpRating">⭐ AI will match by rating & proximity</div>
+          </div>
+        </div>
+        <p class="ai-note" id="aiNote">Our AI ranks available workers by rating, experience, and location — assigns the top match automatically when you confirm.</p>
+      </div>
+
+      <!-- Info chips -->
+      <div class="info-chips">
+        <div class="info-chip">
+          <div class="ic-icon">🛡️</div>
+          <div class="ic-body">
+            <div class="ic-title">Verified Workers</div>
+            <div class="ic-text">All workers are background-checked and skill-verified before joining our platform.</div>
+          </div>
+        </div>
+        <div class="info-chip">
+          <div class="ic-icon">💳</div>
+          <div class="ic-body">
+            <div class="ic-title">Pay After Service</div>
+            <div class="ic-text">No advance payment needed. Pay in cash or online only after the job is done.</div>
+          </div>
+        </div>
+        <div class="info-chip">
+          <div class="ic-icon">🔄</div>
+          <div class="ic-body">
+            <div class="ic-title">Free Rescheduling</div>
+            <div class="ic-text">Plans change? Reschedule up to 2 hours before the appointment at no charge.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- /side-panel -->
+
+  </div>
+</div>
+
+<!-- ══ SUCCESS SCREEN ══ -->
+<div id="successScreen">
+  <div class="success-burst">✓</div>
+  <div class="success-h">Booking<br/>Confirmed!</div>
+  <p class="success-p" id="successP">Your service has been booked. Our AI has assigned the best available worker for you.</p>
+
+  <div style="margin-bottom:24px;">
+    <div class="booking-ref-label" style="text-align:center;color:var(--muted);font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:2px;margin-bottom:8px;">BOOKING REFERENCE</div>
+    <div class="booking-ref" id="successRef">BK-???</div>
+  </div>
+
+  <div class="assigned-worker-big" id="successWorker" style="max-width:480px;margin:0 auto 28px;display:none;">
+    <div class="awb-avatar" id="awbAvatar">R</div>
+    <div>
+      <div class="awb-tag">AI Assigned Worker</div>
+      <div class="awb-name" id="awbName">Ravi Kumar</div>
+      <div class="awb-spec" id="awbSpec">Plumbing Specialist</div>
+      <div class="awb-rating" id="awbRating">⭐ 4.9 · 128 jobs completed</div>
+    </div>
+  </div>
+
+  <div class="booking-details-grid" id="successDetails" style="max-width:480px;margin:0 auto;"></div>
+
+  <div class="success-actions" style="margin-top:16px;">
+    <button class="btn btn-primary btn-large" onclick="newBooking()">＋ Book Another Service</button>
+    <button class="btn btn-secondary btn-large" onclick="window.location.href='homefix-ai-frontend.html'">← Back to Dashboard</button>
+  </div>
+</div>
+
+<footer>
+  HomeFix AI · Intelligent Home Service Management · All bookings saved to MySQL via Spring Boot
+</footer>
+
+<script>
+// ═══════════════════════════════════════════════
+// CONFIG & STATE
+// ═══════════════════════════════════════════════
+const API = 'http://localhost:8080/api';
+const BASE_RATES = {Plumbing:600,Electrical:500,Carpentry:700,Cleaning:400,Painting:800,'AC Repair':900};
+const DUR_MULT   = {'1 hour':1,'2-3 hours':2.5,'Half day':4,'Full day':8};
+const URG_MULT   = {Normal:1,Urgent:1.4,Emergency:1.9};
+
+// Top workers per specialty (for preview)
+const WORKER_PREVIEWS = {
+  Plumbing:   {name:'Ravi Kumar',   spec:'Plumbing Specialist',   rating:'4.9 · 128 jobs',  init:'R'},
+  Electrical: {name:'Karan Patel',  spec:'Electrical Expert',     rating:'4.7 · 96 jobs',   init:'K'},
+  Carpentry:  {name:'Suresh Nair',  spec:'Master Carpenter',      rating:'4.8 · 203 jobs',  init:'S'},
+  Cleaning:   {name:'Pradeep Singh',spec:'Cleaning Professional', rating:'4.9 · 310 jobs',  init:'P'},
+  Painting:   {name:'Arun Verma',   spec:'Painting Expert',       rating:'4.5 · 55 jobs',   init:'A'},
+  'AC Repair':{name:'Manoj Das',    spec:'AC Technician',         rating:'4.6 · 74 jobs',   init:'M'},
+};
+
+let currentStep = 1;
+let selectedService = '';
+let selectedTime = '08:00';
+let selectedPriority = 'Normal';
+
+// ═══════════════════════════════════════════════
+// BACKEND CHECK
+// ═══════════════════════════════════════════════
+async function checkBackend() {
+  try {
+    const r = await fetch(API + '/workers', {signal:AbortSignal.timeout(3000)});
+    if (r.ok) {
+      document.getElementById('apiDot').classList.remove('off');
+      document.getElementById('apiStatus').textContent = 'API Online';
+      return true;
+    }
+  } catch {}
+  document.getElementById('apiDot').classList.add('off');
+  document.getElementById('apiStatus').textContent = 'Demo Mode';
+  return false;
+}
+
+// ═══════════════════════════════════════════════
+// STEP NAVIGATION
+// ═══════════════════════════════════════════════
+function goToStep(n) {
+  if (n > currentStep) return; // can only go back freely
+  currentStep = n;
+  renderStep();
+}
+
+function nextStep(from) {
+  if (!validateStep(from)) return;
+  currentStep = from + 1;
+  renderStep();
+  if (from === 3) buildReviewSummary();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function prevStep(from) {
+  currentStep = from - 1;
+  renderStep();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function renderStep() {
+  // Form panels
+  document.querySelectorAll('.form-step').forEach((s,i) => {
+    s.classList.toggle('active', i+1 === currentStep);
+  });
+
+  // Step indicators (top)
+  for (let i=1;i<=4;i++) {
+    const ind = document.getElementById('stepInd'+i);
+    const line = document.getElementById('stepLine'+i);
+    ind.classList.remove('active','done');
+    if (i < currentStep)  { ind.classList.add('done');  ind.querySelector('.step-num').textContent = '✓'; }
+    if (i === currentStep){ ind.classList.add('active'); ind.querySelector('.step-num').textContent = i; }
+    if (i > currentStep)  { ind.querySelector('.step-num').textContent = i; }
+    if (line) line.classList.toggle('done', i < currentStep);
+  }
+
+  // Side panel progress
+  for (let i=1;i<=4;i++) {
+    const ps = document.getElementById('ps'+i);
+    ps.classList.remove('active','done');
+    if (i < currentStep)  ps.classList.add('done');
+    if (i === currentStep) ps.classList.add('active');
+    const circle = ps.querySelector('.ps-circle');
+    circle.textContent = i < currentStep ? '✓' : i;
+  }
+}
+
+// ═══════════════════════════════════════════════
+// VALIDATION
+// ═══════════════════════════════════════════════
+function validateStep(step) {
+  let valid = true;
+
+  const showErr = (id, show) => {
+    document.getElementById(id).style.display = show ? 'block' : 'none';
+  };
+  const markErr = (id, err) => {
+    const el = document.getElementById(id);
+    el.classList.toggle('error', err);
+  };
+
+  if (step === 1) {
+    const name    = document.getElementById('fName').value.trim();
+    const phone   = document.getElementById('fPhone').value.trim();
+    const address = document.getElementById('fAddress').value.trim();
+    const city    = document.getElementById('fCity').value;
+
+    if (!name)    { markErr('fName',true);    showErr('errName',true);    valid=false; } else { markErr('fName',false); showErr('errName',false); }
+    if (!phone)   { markErr('fPhone',true);   showErr('errPhone',true);   valid=false; } else { markErr('fPhone',false); showErr('errPhone',false); }
+    if (!address) { markErr('fAddress',true); showErr('errAddress',true); valid=false; } else { markErr('fAddress',false); showErr('errAddress',false); }
+    if (!city)    { showErr('errCity',true);  valid=false; } else { showErr('errCity',false); }
+  }
+
+  if (step === 2) {
+    if (!selectedService) { document.getElementById('errService').style.display='block'; valid=false; }
+    else document.getElementById('errService').style.display='none';
+    const desc = document.getElementById('fDesc').value.trim();
+    if (!desc) { document.getElementById('fDesc').classList.add('error'); document.getElementById('errDesc').style.display='block'; valid=false; }
+    else       { document.getElementById('fDesc').classList.remove('error'); document.getElementById('errDesc').style.display='none'; }
+  }
+
+  if (step === 3) {
+    const date = document.getElementById('fDate').value;
+    if (!date) { document.getElementById('fDate').classList.add('error'); document.getElementById('errDate').style.display='block'; valid=false; }
+    else       { document.getElementById('fDate').classList.remove('error'); document.getElementById('errDate').style.display='none'; }
+  }
+
+  return valid;
+}
+
+// ═══════════════════════════════════════════════
+// SERVICE SELECTION
+// ═══════════════════════════════════════════════
+function selectService(name, el) {
+  document.querySelectorAll('.svc-card').forEach(c=>c.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedService = name;
+  document.getElementById('errService').style.display='none';
+  updateEstimate();
+  updateWorkerPreview(name);
+}
+
+function updateWorkerPreview(svc) {
+  const w = WORKER_PREVIEWS[svc];
+  if (!w) return;
+  document.getElementById('wpAvatar').textContent = w.init;
+  document.getElementById('wpName').textContent   = w.name;
+  document.getElementById('wpSpec').textContent   = w.spec;
+  document.getElementById('wpRating').textContent = '⭐ ' + w.rating;
+  document.getElementById('aiNote').textContent   = `${w.name} is the top-rated ${svc} specialist available. AI confirms final assignment at booking time.`;
+}
+
+// ═══════════════════════════════════════════════
+// PRIORITY
+// ═══════════════════════════════════════════════
+function setPriority(p, el) {
+  document.querySelectorAll('.prio-btn').forEach(b => b.className = 'prio-btn');
+  el.classList.add('sel-' + p.toLowerCase());
+  selectedPriority = p;
+  document.getElementById('fPriority').value = p;
+  updateEstimate();
+}
+
+// ═══════════════════════════════════════════════
+// TIME SLOT
+// ═══════════════════════════════════════════════
+function selectTime(t, el) {
+  if (el.classList.contains('disabled')) return;
+  document.querySelectorAll('.time-slot').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedTime = t;
+  document.getElementById('fTime').value = t;
+}
+
+// ═══════════════════════════════════════════════
+// PRICE ESTIMATE
+// ═══════════════════════════════════════════════
+function updateEstimate() {
+  const svc   = selectedService;
+  const dur   = document.getElementById('fDuration')?.value || '2-3 hours';
+  const urg   = selectedPriority;
+  const parts = document.getElementById('fParts')?.value || 'No';
+
+  if (!svc) {
+    document.getElementById('estPrice').textContent = '₹—';
+    document.getElementById('estSubtext').textContent = 'Select a service to see estimate';
+    document.getElementById('estBreakdown').style.display = 'none';
+    return;
+  }
+
+  const base     = BASE_RATES[svc] || 600;
+  const dm       = DUR_MULT[dur]   || 2.5;
+  const um       = URG_MULT[urg]   || 1;
+  const labour   = Math.round(base * dm * um);
+  const material = parts === 'Yes' ? Math.round(base * 0.5) : 0;
+  const tax      = Math.round((labour + material) * 0.05);
+  const total    = labour + material + tax;
+
+  document.getElementById('estPrice').textContent     = '₹' + total.toLocaleString();
+  document.getElementById('estSubtext').textContent   = `${svc} · ${dur} · ${urg}`;
+  document.getElementById('estBreakdown').style.display = 'flex';
+  document.getElementById('estLabour').textContent    = '₹' + labour.toLocaleString();
+  document.getElementById('estMaterials').textContent = parts==='Yes' ? '₹'+material.toLocaleString() : 'Not required';
+  document.getElementById('estTax').textContent       = '₹' + tax.toLocaleString();
+  document.getElementById('estTotal').textContent     = '₹' + total.toLocaleString();
+}
+
+// ═══════════════════════════════════════════════
+// REVIEW SUMMARY
+// ═══════════════════════════════════════════════
+function buildReviewSummary() {
+  const dur   = document.getElementById('fDuration').value;
+  const parts = document.getElementById('fParts').value;
+  const base  = BASE_RATES[selectedService]||600;
+  const dm    = DUR_MULT[dur]||2.5;
+  const um    = URG_MULT[selectedPriority]||1;
+  const labour= Math.round(base*dm*um);
+  const mat   = parts==='Yes'?Math.round(base*0.5):0;
+  const tax   = Math.round((labour+mat)*0.05);
+  const total = labour+mat+tax;
+
+  const row = (label, val, cls='') => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);font-size:14px;">
+      <span style="color:var(--muted);">${label}</span>
+      <strong class="${cls}">${val}</strong>
+    </div>`;
+
+  const priorityColors = {Normal:'color:var(--blue)',Urgent:'color:var(--amber)',Emergency:'color:var(--red)'};
+
+  document.getElementById('reviewSummary').innerHTML = `
+    <div style="background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:24px;">
+      <div style="font-size:11px;font-family:'JetBrains Mono',monospace;letter-spacing:1px;text-transform:uppercase;color:var(--muted);margin-bottom:16px;">Booking Summary</div>
+      ${row('Name',        document.getElementById('fName').value)}
+      ${row('Phone',       document.getElementById('fPhone').value)}
+      ${row('City',        document.getElementById('fCity').value)}
+      ${row('Service',     selectedService)}
+      ${row('Priority',    `<span style="${priorityColors[selectedPriority]}">${selectedPriority}</span>`)}
+      ${row('Date',        document.getElementById('fDate').value)}
+      ${row('Time',        selectedTime)}
+      ${row('Duration',    dur)}
+      ${row('Materials',   parts)}
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:14px 0 0;font-size:16px;">
+        <strong>Estimated Total</strong>
+        <strong style="color:var(--orange);font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:.5px;">₹${total.toLocaleString()}</strong>
+      </div>
+    </div>`;
+}
+
+// ═══════════════════════════════════════════════
+// SUBMIT BOOKING
+// ═══════════════════════════════════════════════
+async function submitBooking() {
+  // Terms check
+  if (!document.getElementById('fTerms').checked) {
+    document.getElementById('errTerms').style.display = 'block';
+    return;
+  }
+  document.getElementById('errTerms').style.display = 'none';
+
+  const btn = document.getElementById('submitBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span> Confirming your booking…';
+
+  const dur   = document.getElementById('fDuration').value;
+  const parts = document.getElementById('fParts').value;
+  const base  = BASE_RATES[selectedService]||600;
+  const dm    = DUR_MULT[dur]||2.5;
+  const um    = URG_MULT[selectedPriority]||1;
+  const labour= Math.round(base*dm*um);
+  const mat   = parts==='Yes'?Math.round(base*0.5):0;
+  const tax   = Math.round((labour+mat)*0.05);
+  const estimatedPrice = labour+mat+tax;
+
+  const payload = {
+    customerName:   document.getElementById('fName').value,
+    phone:          document.getElementById('fPhone').value,
+    email:          document.getElementById('fEmail').value,
+    address:        document.getElementById('fAddress').value + ', ' + document.getElementById('fCity').value,
+    serviceType:    selectedService,
+    description:    document.getElementById('fDesc').value,
+    priority:       selectedPriority,
+    scheduledDate:  document.getElementById('fDate').value,
+    scheduledTime:  selectedTime,
+    estimatedPrice: estimatedPrice,    // ← ADD THIS
+  };
+
+  let result = null;
+  try {
+    const res = await fetch(API + '/bookings', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify(payload),
+      signal: AbortSignal.timeout(5000)
+    });
+    if (res.ok) result = await res.json();
+  } catch {}
+
+  // Fallback to demo
+  if (!result) {
+    result = {
+      bookingCode:     'BK-' + String(Math.floor(Math.random()*900)+100),
+      status:          'Assigned',
+      estimatedPrice,
+      assignedWorker:  WORKER_PREVIEWS[selectedService] ? {
+        name:     WORKER_PREVIEWS[selectedService].name,
+        specialty:selectedService,
+        rating:   parseFloat(WORKER_PREVIEWS[selectedService].rating),
+        jobsCompleted: parseInt(WORKER_PREVIEWS[selectedService].rating.split('·')[1]) || 0
+      } : null,
+      ...payload
+    };
+  }
+
+  btn.disabled = false;
+  btn.innerHTML = '🔧 Confirm & Book Now';
+
+  showSuccess(result, estimatedPrice);
+}
+
+// ═══════════════════════════════════════════════
+// SUCCESS SCREEN
+// ═══════════════════════════════════════════════
+function showSuccess(result, estimatedPrice) {
+  document.getElementById('formArea').style.display       = 'none';
+  document.getElementById('sidePanelContent').style.display = 'none';
+  document.getElementById('successScreen').style.display  = 'block';
+  window.scrollTo({top:0,behavior:'smooth'});
+
+  document.getElementById('successRef').textContent = result.bookingCode || 'BK-???';
+  document.getElementById('successP').textContent =
+    `Your ${result.serviceType} booking is confirmed for ${result.scheduledDate} at ${result.scheduledTime}. Our AI has assigned the best available worker.`;
+
+  // Assigned worker section
+  if (result.assignedWorker) {
+    const w = result.assignedWorker;
+    document.getElementById('successWorker').style.display = 'flex';
+    document.getElementById('awbAvatar').textContent = w.name?.[0] || '?';
+    document.getElementById('awbName').textContent   = w.name || 'Worker';
+    document.getElementById('awbSpec').textContent   = w.specialty || selectedService;
+    document.getElementById('awbRating').textContent = `⭐ ${w.rating || '5.0'} · ${w.jobsCompleted || 0} jobs completed`;
+  }
+
+  // Details grid
+  document.getElementById('successDetails').innerHTML = `
+    <div class="bdc"><div class="bdc-label">Service</div><div class="bdc-val">${result.serviceType}</div></div>
+    <div class="bdc"><div class="bdc-label">Priority</div><div class="bdc-val">${result.priority}</div></div>
+    <div class="bdc"><div class="bdc-label">Scheduled Date</div><div class="bdc-val">${result.scheduledDate}</div></div>
+    <div class="bdc"><div class="bdc-label">Scheduled Time</div><div class="bdc-val">${result.scheduledTime}</div></div>
+    <div class="bdc"><div class="bdc-label">Status</div><div class="bdc-val orange">${result.status}</div></div>
+    <div class="bdc"><div class="bdc-label">Estimated Price</div><div class="bdc-val green">₹${(result.estimatedPrice||estimatedPrice).toLocaleString()}</div></div>`;
+
+  toast('success', 'Booking Confirmed! 🎉', `${result.bookingCode} saved to database`);
+}
+
+// ═══════════════════════════════════════════════
+// RESET
+// ═══════════════════════════════════════════════
+function newBooking() {
+  document.getElementById('formArea').style.display       = 'block';
+  document.getElementById('sidePanelContent').style.display = 'flex';
+  document.getElementById('successScreen').style.display  = 'none';
+  document.querySelectorAll('.form-step').forEach((s,i)=>s.classList.toggle('active',i===0));
+  document.querySelectorAll('.finput,.ftextarea').forEach(el=>el.value='');
+  document.querySelectorAll('.fselect').forEach(el=>el.selectedIndex=0);
+  document.getElementById('fTerms').checked = false;
+  selectedService = ''; selectedTime = '08:00'; selectedPriority = 'Normal';
+  currentStep = 1;
+  renderStep();
+  document.getElementById('fDate').valueAsDate = new Date();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════
+// TOAST
+// ═══════════════════════════════════════════════
+function toast(type, title, msg) {
+  const zone = document.getElementById('toastZone');
+  const icons = {success:'✅',error:'❌',info:'ℹ️'};
+  const t = document.createElement('div');
+  t.className = `toast ${type}`;
+  t.innerHTML = `<div class="toast-icon">${icons[type]||'💬'}</div><div class="toast-body"><div class="toast-title">${title}</div><div class="toast-msg">${msg}</div></div>`;
+  zone.appendChild(t);
+  setTimeout(()=>{ t.classList.add('leaving'); setTimeout(()=>t.remove(),300); }, 4500);
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // Set today's date as default
+  const today = new Date();
+  today.setDate(today.getDate()+1); // default tomorrow
+  document.getElementById('fDate').valueAsDate = today;
+
+  // Live price update on duration/parts change
+  document.getElementById('fDuration')?.addEventListener('change', updateEstimate);
+
+  checkBackend();
+});
+</script>
+</body>
+</html>
